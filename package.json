@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.10.4",
-    "canvas": "^2.11.2",
+    "appcanvas": "file:",
     "fabric": "^6.5.4",
     "konva": "^9.3.18",
     "next": "^15.1.6",

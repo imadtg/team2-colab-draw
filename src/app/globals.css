@@ -2,3 +2,61 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.canvas-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .canvas-wrapper {
+    position: relative;
+    border: 2px solid #2c3e50;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .delete-confirmation-modal {
+    position: absolute;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+  }
+
+  .modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .modal-buttons button {
+    padding: 5px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .toolbar {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    padding: 10px;
+    background: #f0f0f0;
+    border-radius: 8px;
+  }
+
+  .tool-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    background: white;
+    border-radius: 4px;
+  }
+
+  button.active {
+    background: #3498db;
+    color: white;
+  }
