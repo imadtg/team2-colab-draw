@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import type { KonvaEventObject } from 'konva/lib/Node';
 import { Ellipse } from 'react-konva';
 
+type ToolType = 'pen' | 'eraser' | 'rectangle' | 'circle' | 'triangle' | 'star' | 'diamond' | 'ellipse';
+
 export default function Canvas() {
   const [canvasSize, setCanvasSize] = useState({ width: 1000, height: 600 });
 
@@ -24,7 +26,7 @@ export default function Canvas() {
   const [shapes, setShapes] = useState<{ type: string; x: number; y: number; width: number; height: number; color: string }[]>([]);
   const [drawing, setDrawing] = useState(false);
   const [color, setColor] = useState('#000000');
-  const [tool, setTool] = useState<'pen' | 'eraser' | 'rectangle' | 'circle' | 'triangle' | 'star' | 'diamond' | 'ellipse'>('pen');
+  const [tool, setTool] = useState<ToolType>('pen');
   const [startPos, setStartPos] = useState<{ x: number; y: number } | null>(null);
   const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
 
@@ -137,7 +139,10 @@ export default function Canvas() {
         
         <label className="flex text-white items-center gap-2">
           📐 Forme :
-          <select onChange={(e) => setTool(e.target.value as any)} className="p-2 border text-black rounded">
+          <select 
+            onChange={(e) => setTool(e.target.value as ToolType)} 
+            className="p-2 border text-black rounded"
+          >
             <option value="rectangle">⬛ Rectangle</option>
             <option value="circle">🔵 Cercle</option>
             <option value="triangle">🔺 Triangle</option>
