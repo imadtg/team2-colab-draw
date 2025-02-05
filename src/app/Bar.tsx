@@ -1,5 +1,5 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 
 interface BarProps {
   handleColorBordure: (color: string) => void; // Fonction qui prend une couleur en paramètre
@@ -7,7 +7,7 @@ interface BarProps {
   handleColorBackground: (color: string) => void; // Fonction qui prend une couleur en paramètre
   handleLigneWidth: (width: number) => void;
   handleLigneType: (type: boolean) => void;
-  handleOpacity:(opacity:number)=>void;
+  handleOpacity: (opacity: number) => void;
 }
 
 const Bar: React.FC<BarProps> = ({
@@ -20,7 +20,6 @@ const Bar: React.FC<BarProps> = ({
 }) => {
   const [colorBordure, setColorBordure] = useState("black");
   const [colorBackground, setcolorBackground] = useState("black");
-  const [ligneWidth, setligneWidth] = useState(1);
 
   const handlerColorBordure = (color: string) => {
     handleColorBordure(color);
@@ -32,7 +31,6 @@ const Bar: React.FC<BarProps> = ({
   };
   const handlerLigneWidth = (width: number) => {
     handleLigneWidth(width);
-    setligneWidth(width);
   };
 
   const handlerLigneType = (type: boolean) => {
@@ -42,7 +40,7 @@ const Bar: React.FC<BarProps> = ({
 
   const handleOpacityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setOpacity(parseFloat(event.target.value));
-    handleOpacity(parseFloat(event.target.value))
+    handleOpacity(parseFloat(event.target.value));
   };
 
   return (
@@ -128,9 +126,17 @@ const Bar: React.FC<BarProps> = ({
         <div className="flex flex-row  gap-[15px]">
           <button
             className="w-[25px] h-[25px] rounded-[5px] text-center"
-            style={{ backgroundColor: "#d6d6d6 " }}
+            style={{
+              backgroundColor: "#d6d6d6 ",
+            }}
           >
-            <img src="/edit.png" alt="i" className="w-6 h-6" />
+            <Image
+              src="/edit.png"
+              alt="i"
+              className="w-6 h-6"
+              width={24}
+              height={24}
+            />
           </button>
 
           <button
@@ -141,7 +147,13 @@ const Bar: React.FC<BarProps> = ({
               backgroundPosition: "center",
             }}
           >
-            <img src="/v.png" alt="i" className="w-6 h-6" />
+            <Image
+              src="/v.png"
+              alt="i"
+              className="w-6 h-6"
+              width={24}
+              height={24}
+            />
           </button>
 
           <button
@@ -152,7 +164,13 @@ const Bar: React.FC<BarProps> = ({
               backgroundPosition: "center",
             }}
           >
-            <img src="/i-path.png" alt="i" className="w-6 h-6" />
+            <Image
+              src="/i-path.png"
+              alt="i"
+              className="w-6 h-6"
+              width={24}
+              height={24}
+            />
           </button>
         </div>
       </div>
@@ -166,7 +184,13 @@ const Bar: React.FC<BarProps> = ({
             }}
             onClick={() => handlerLigneWidth(5)}
           >
-            <img src="/remove.png" alt="i" className="w-6 h-6 " />
+            <Image
+              src="/remove.png"
+              alt="i"
+              className="w-6 h-6"
+              width={24}
+              height={24}
+            />
           </button>
 
           <button
@@ -176,16 +200,24 @@ const Bar: React.FC<BarProps> = ({
             }}
             onClick={() => handlerLigneWidth(2)}
           >
-            <img src="/minus.png" alt="i" className="w-6 h-6" />
+            <Image
+              src="/minus.png"
+              alt="i"
+              className="w-6 h-6"
+              width={24}
+              height={24}
+            />
           </button>
           <button
             className="w-[25px] h-[25px] rounded-[5px] text-center"
             onClick={() => handlerLigneWidth(1)}
           >
-            <img
-              src="public/circumflex-accent.png"
+            <Image
+              src="/circumflex-accent.png"
               alt="i"
               className="w-6 h-6"
+              width={24}
+              height={24}
             />
           </button>
         </div>
@@ -200,7 +232,13 @@ const Bar: React.FC<BarProps> = ({
             }}
             onClick={() => handlerLigneType(false)}
           >
-            <img src="/remove.png" alt="i" className="w-6 h-6 " />
+            <Image
+              src="/remove.png"
+              alt="i"
+              className="w-6 h-6"
+              width={24}
+              height={24}
+            />
           </button>
 
           <button
@@ -210,7 +248,13 @@ const Bar: React.FC<BarProps> = ({
             }}
             onClick={() => handlerLigneType(true)}
           >
-            <img src="/dashed-line.png" alt="i" className="w-6 h-6" />
+            <Image
+              src="/dashed-line.png"
+              alt="i"
+              className="w-6 h-6"
+              width={24}
+              height={24}
+            />
           </button>
         </div>
       </div>
