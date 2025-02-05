@@ -18,9 +18,12 @@ const ClientCanvas = () => {
 
     useEffect(() => {
         const socket = new PartySocket({
-            host: "localhost:1999", // TODO: change to the partykit host
+            host: process.env.NEXT_PUBLIC_PARTYKIT_HOST || "localhost:1999",
             room: "room1", // TODO: change to the room id   
         });
+
+        console.log(process.env.NEXT_PUBLIC_PARTYKIT_HOST)
+
 
         setSocket(socket);
 
