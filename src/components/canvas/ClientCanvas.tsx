@@ -10,39 +10,47 @@ const ClientCanvas = () => {
   const [BarSide, setBarSide] = useState(true);
   const [cls, setcls] = useState("Bar");
 
+  const [colorBordure, setColorBordure] = useState("red");
+  const [BackgroundColor, setBackgroundColor] = useState("red");
+  const [ligneWidth, setligneWidth] = useState(2);
+  const [ligneType, setligneType] = useState(false);
+  const [opacity, setOpacity] = useState(1);
+
   const handlerTool = (
     shapeType:
+      | "selector"
       | "pen"
       | "eraser"
       | "text"
       | "rectangle"
       | "circle"
       | "triangle"
-      | "star"
       | "ligne"
       | "diamond"
       | "selector"
       | "ellipse"
   ) => {
-
     // Vérifie explicitement chaque forme
     if (
       shapeType === "circle" ||
       shapeType === "rectangle" ||
       shapeType === "triangle" ||
       shapeType === "text" ||
-      shapeType === "pen"
+      shapeType === "pen" ||
+      shapeType === "ligne" ||
+      shapeType === "ellipse"
     ) {
       setBarSide(true);
     } else {
-      setBarSide(false); // Ou tu peux décider d'une autre logique ici
+      setBarSide(false);
     }
     if (shapeType === "pen") toggleDrawingMode();
     else {
       if (
         shapeType === "circle" ||
         shapeType === "rectangle" ||
-        shapeType === "triangle"
+        shapeType === "triangle" || 
+        shapeType === "ellipse"
       ) {
         addShape(shapeType);
       }
@@ -62,7 +70,6 @@ const ClientCanvas = () => {
       toggleDrawingMode();
     }
   };
-
   const [tool, setTool] = useState<
     | "selector"
     | "pen"
@@ -72,10 +79,9 @@ const ClientCanvas = () => {
     | "circle"
     | "ligne"
     | "triangle"
-    | "star"
-    | "diamond"
     | "ellipse"
   >("pen");
+
   useEffect(() => {
     const parent = canvasRef.current?.parentElement;
     if (canvasRef.current && !fabricCanvasRef.current) {
@@ -99,7 +105,7 @@ const ClientCanvas = () => {
   }, []);
 
   const addShape = (
-    shapeType: "rectangle" | "circle" | "triangle" | "ligne" |"text"
+    shapeType: "rectangle" | "circle" | "triangle" | "ligne" | "text" | "ellipse"
   ) => {
     if (!fabricCanvasRef.current) return;
 
@@ -110,16 +116,23 @@ const ClientCanvas = () => {
       const rect = new fabric.Rect({
         left: center.left - 50,
         top: center.top - 50,
-        fill: "#000",
+        fill: BackgroundColor,
+        ...(ligneType ? { strokeDashArray: [5, 5] } : null),
+        stroke: colorBordure,
+        strokeWidth: ligneWidth,
         width: 100,
         height: 100,
+        opacity: 0.5,
       });
       canvas.add(rect);
     } else if (shapeType === "circle") {
       const circle = new fabric.Circle({
         left: center.left - 50,
         top: center.top - 50,
-        fill: "#000",
+        fill: BackgroundColor,
+        stroke: colorBordure,
+        ...(ligneType ? { strokeDashArray: [5, 5] } : null),
+        strokeWidth: ligneWidth,
         radius: 50,
       });
       canvas.add(circle);
@@ -127,33 +140,50 @@ const ClientCanvas = () => {
       const triangle = new fabric.Triangle({
         width: 100,
         height: 100,
-        fill: "black",
+        fill: BackgroundColor,
         left: 100,
         top: 100,
         angle: 0,
+        ...(ligneType ? { strokeDashArray: [5, 5] } : null),
+        stroke: colorBordure,
+        strokeWidth: ligneWidth,
         selectable: true,
       });
       canvas.add(triangle);
     } else if (shapeType === "ligne") {
       const line = new fabric.Line([50, 50, 200, 200], {
-        stroke: "black",
-        strokeWidth: 5,
+        stroke: colorBordure,
+        strokeWidth: ligneWidth,
+        ...(ligneType ? { strokeDashArray: [5, 5] } : null),
         selectable: true,
       });
       canvas.add(line);
+    } else if (shapeType === "text") {
+      const text = new fabric.Textbox("Hello World", {
+        left: 100,
+        top: 100,
+        fill: colorBordure,
+        fontSize: ligneWidth * 10,
+        fontFamily: "Arial",
+        selectable: true,
+      });
+      canvas.add(text);
+
     }
-    else if (shapeType === "text") {
-        const text = new fabric.Textbox('Hello World', {
-            left: 100,
-            top: 100,
-            fill: 'black',
-            fontSize: 30,
-            fontFamily: 'Arial',
-            selectable: true
+    else if (shapeType==='ellipse')
+    {
+        const ellipse = new fabric.Ellipse({
+            left: center.left - 50,
+            top: center.top - 50,
+            fill: BackgroundColor, // Remplace BackgroundColor par la couleur que tu souhaites
+            stroke: colorBordure,  // Remplace colorBordure par la couleur de bordure souhaitée
+            ...(ligneType ? { strokeDashArray: [5, 5] } : null), // Si ligneType est vrai, appliquer un motif de bordure en tirets
+            strokeWidth: ligneWidth, // Largeur de la bordure
+            rx: 50, // Rayon horizontal (demi-largeur de l'ellipse)
+            ry: 30, // Rayon vertical (demi-hauteur de l'ellipse)
           });
-          canvas.add(text);
-          
-      }
+          canvas.add(ellipse);
+    }
     //   const path = new fabric.Path('M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80', {
     //     fill: 'transparent',
     //     stroke: 'pink',
@@ -172,8 +202,6 @@ const ClientCanvas = () => {
     //     selectable: true
     //   });
     //   canvas.add(polyline);
-      
-      
   };
 
   const toggleDrawingMode = () => {
@@ -189,14 +217,36 @@ const ClientCanvas = () => {
       if (!canvas.freeDrawingBrush) {
         canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
       }
-      canvas.freeDrawingBrush.color = "#000"; // White color for drawing
-      canvas.freeDrawingBrush.width = 3;
+      canvas.freeDrawingBrush.color = colorBordure; // White color for drawing
+      canvas.freeDrawingBrush.width = ligneWidth;
     }
   };
+  const handleColorBordure = (colorBordure: string) => {
+    setColorBordure(colorBordure);
+  };
+  const handleColorBackground = (colorBackground: string) => {
+    setBackgroundColor(colorBackground);
+  };
+  const handleLigneWidth = (width: number) => {
+    setligneWidth(width);
+  };
+  const handleLigneType = (type: boolean) => {
+    setligneType(type);
+  };
 
+  const handleOpacity = (opacity: number) => {
+    setOpacity(opacity);
+  };
   return (
     <>
-      {BarSide && <Bar />}
+      <Bar
+        isVisible={BarSide}
+        handleColorBordure={handleColorBordure}
+        handleColorBackground={handleColorBackground}
+        handleLigneWidth={handleLigneWidth}
+        handleLigneType={handleLigneType}
+        handleOpacity={handleOpacity}
+      />
       <div className="flex flex-col items-center gap-4">
         <div
           className="fixed bottom-[5%]  left-1/2 transform -translate-x-1/2
@@ -267,12 +317,19 @@ const ClientCanvas = () => {
                   onClick={() => handlerTool("triangle")}
                 />
               </li>
+              <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
+                <img
+                  src="/vector.png"
+                  alt="ellipse Icon"
+                  onClick={() => handlerTool("ellipse")}
+                />
+              </li>
             </ol>
           </div>
         </div>
         <div
           className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
-                bg-white  rounded-lg shadow-lg h-3/4 w-3/4"
+                bg-white  rounded-lg shadow-lg h-[77%] w-[77%]"
         >
           <canvas ref={canvasRef} />
         </div>

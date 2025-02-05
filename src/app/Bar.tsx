@@ -1,43 +1,89 @@
 import React from "react";
 import { useState } from "react";
 
+interface BarProps {
+  handleColorBordure: (color: string) => void; // Fonction qui prend une couleur en paramètre
+  isVisible?: boolean;
+  handleColorBackground: (color: string) => void; // Fonction qui prend une couleur en paramètre
+  handleLigneWidth: (width: number) => void;
+  handleLigneType: (type: boolean) => void;
+  handleOpacity:(opacity:number)=>void;
+}
 
-export default function Bar() { 
-   const [opacity, setOpacity] = useState(1);
+const Bar: React.FC<BarProps> = ({
+  isVisible,
+  handleColorBordure,
+  handleColorBackground,
+  handleLigneWidth,
+  handleLigneType,
+  handleOpacity,
+}) => {
+  const [colorBordure, setColorBordure] = useState("black");
+  const [colorBackground, setcolorBackground] = useState("black");
+  const [ligneWidth, setligneWidth] = useState(1);
+
+  const handlerColorBordure = (color: string) => {
+    handleColorBordure(color);
+    setColorBordure(color);
+  };
+  const handlerColorBackground = (color: string) => {
+    handleColorBackground(color);
+    setcolorBackground(color);
+  };
+  const handlerLigneWidth = (width: number) => {
+    handleLigneWidth(width);
+    setligneWidth(width);
+  };
+
+  const handlerLigneType = (type: boolean) => {
+    handleLigneType(type);
+  };
+  const [opacity, setOpacity] = useState(1);
 
   const handleOpacityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setOpacity(Number(event.target.value));
+    setOpacity(parseFloat(event.target.value));
+    handleOpacity(parseFloat(event.target.value))
   };
 
   return (
-    <div 
-    className={`fixed z-10 flex mt-[100px] w-[250px] h-[513px] bg-black top-[30px] left-0 rounded-[20px] p-[10px] ml-[20px] flex-col gap-[25px] text-white`}    >
+    <div
+      className={`fixed z-10 flex mt-[100px] w-[250px] h-[513px] bg-black top-[5px] left-0 rounded-[20px] p-[10px] ml-[10px] flex-col gap-[25px] text-white  transition-all duration-500 ease-in-out ${
+        isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"
+      }`}
+    >
       <div>
         <span className="text-xs ">Color</span>
         <div className="flex flex-row  gap-[15px]">
           <button
+            className="w-[25px] h-[25px] rounded-[5px] text-center  border-[1px] border-white"
+            style={{ backgroundColor: "white" }}
+            onClick={() => handlerColorBordure("white")}
+          ></button>
+          <button
             className="w-[25px] h-[25px] rounded-[5px] text-center border-[1px] border-white"
             style={{ backgroundColor: "black" }}
+            onClick={() => handlerColorBordure("black")}
           ></button>
           <button
             className="w-[25px] h-[25px] rounded-[5px] text-center  border-[1px] border-white"
             style={{ backgroundColor: "red" }}
+            onClick={() => handlerColorBordure("red")}
           ></button>{" "}
-          <button
-            className="w-[25px] h-[25px] rounded-[5px] text-center  border-[1px] border-white"
-            style={{ backgroundColor: "green" }}
-          ></button>
           <button
             className="w-[25px] h-[25px] rounded-[5px] text-center border-[1px] border-white"
             style={{ backgroundColor: "blue" }}
+            onClick={() => handlerColorBordure("blue")}
           ></button>{" "}
           <button
             className="w-[25px] h-[25px] rounded-[5px] text-center  border-[1px] border-white"
             style={{ backgroundColor: "orange" }}
+            onClick={() => handlerColorBordure("orange")}
           ></button>
           <input
             type="color"
-            className="w-[25px] h-[25px] rounded-[5px] border-none cursor-pointer  border-[1px] border-white"
+            className="w-[25px] h-[25px] rounded-[5px] border-none cursor-pointer"
+            value={colorBordure}
+            onChange={(e) => handlerColorBordure(e.target.value)}
           />
         </div>
       </div>
@@ -46,27 +92,34 @@ export default function Bar() {
         <div className="flex flex-row  gap-[15px]">
           <button
             className="w-[25px] h-[25px] rounded-[5px] text-center"
+            style={{ backgroundColor: " #fff" }}
+            onClick={() => handlerColorBackground("#fff")}
+          ></button>
+          <button
+            className="w-[25px] h-[25px] rounded-[5px] text-center"
             style={{ backgroundColor: "red " }}
+            onClick={() => handlerColorBackground("red")}
           ></button>{" "}
           <button
             className="w-[25px] h-[25px] rounded-[5px] text-center"
             style={{ backgroundColor: "#ffc9c9" }}
+            onClick={() => handlerColorBackground("#ffc9c9")}
           ></button>
           <button
             className="w-[25px] h-[25px] rounded-[5px] text-center"
             style={{ backgroundColor: "#b2f2bb " }}
+            onClick={() => handlerColorBackground("#b2f2bb")}
           ></button>{" "}
           <button
             className="w-[25px] h-[25px] rounded-[5px] text-center"
             style={{ backgroundColor: " #a5d8ff " }}
-          ></button>
-          <button
-            className="w-[25px] h-[25px] rounded-[5px] text-center"
-            style={{ backgroundColor: " #ffec99 " }}
+            onClick={() => handlerColorBackground("#a5d8ff ")}
           ></button>
           <input
             type="color"
             className="w-[25px] h-[25px] rounded-[5px] border-none cursor-pointer"
+            value={colorBackground}
+            onChange={(e) => handlerColorBackground(e.target.value)}
           />
         </div>
       </div>
@@ -104,13 +157,14 @@ export default function Bar() {
         </div>
       </div>
       <div>
-        <span className="text-xs ">Largeur de Contour</span>
+        <span className="text-xs ">Largeur de Ligne</span>
         <div className="flex flex-row  gap-[15px]">
           <button
             className="w-[25px] h-[25px] rounded-[5px] text-center"
             style={{
               backgroundColor: "white",
             }}
+            onClick={() => handlerLigneWidth(5)}
           >
             <img src="/remove.png" alt="i" className="w-6 h-6 " />
           </button>
@@ -120,10 +174,14 @@ export default function Bar() {
             style={{
               backgroundColor: "white",
             }}
+            onClick={() => handlerLigneWidth(2)}
           >
             <img src="/minus.png" alt="i" className="w-6 h-6" />
           </button>
-          <button className="w-[25px] h-[25px] rounded-[5px] text-center">
+          <button
+            className="w-[25px] h-[25px] rounded-[5px] text-center"
+            onClick={() => handlerLigneWidth(1)}
+          >
             <img
               src="public/circumflex-accent.png"
               alt="i"
@@ -140,6 +198,7 @@ export default function Bar() {
             style={{
               backgroundColor: "white",
             }}
+            onClick={() => handlerLigneType(false)}
           >
             <img src="/remove.png" alt="i" className="w-6 h-6 " />
           </button>
@@ -149,16 +208,9 @@ export default function Bar() {
             style={{
               backgroundColor: "white",
             }}
+            onClick={() => handlerLigneType(true)}
           >
             <img src="/dashed-line.png" alt="i" className="w-6 h-6" />
-          </button>
-          <button
-            className="w-[25px] h-[25px] rounded-[5px] text-center"
-            style={{
-              backgroundColor: "white",
-            }}
-          >
-            <img src="/line.png" alt="i" className="w-6 h-6" />
           </button>
         </div>
       </div>
@@ -179,4 +231,6 @@ export default function Bar() {
       </div>
     </div>
   );
-}
+};
+
+export default Bar;
