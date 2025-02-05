@@ -2,6 +2,7 @@
 import Navbar from './navbar';
 import { Providers } from './providers';
 import './globals.css';
+import "@uploadthing/react/styles.css";
 
 export default function RootLayout({
   children,
