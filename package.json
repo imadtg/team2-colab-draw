@@ -12,6 +12,7 @@
     "@clerk/nextjs": "^6.10.4",
     "fabric": "^6.5.4",
     "next": "^15.1.6",
+    "partysocket": "^1.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

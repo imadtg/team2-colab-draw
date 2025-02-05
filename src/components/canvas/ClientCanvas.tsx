@@ -3,12 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import * as fabric from "fabric";
 import Bar from "@/app/Bar";
+import PartySocket from "partysocket";
+
 const ClientCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
   const [isDrawingMode, setIsDrawingMode] = useState(false);
   const [BarSide, setBarSide] = useState(true);
   const [cls, setcls] = useState("Bar");
+  const [socket, setSocket] = useState<PartySocket | null>(null);
 
   const [colorBordure, setColorBordure] = useState("red");
   const [BackgroundColor, setBackgroundColor] = useState("red");
@@ -225,6 +228,38 @@ const ClientCanvas = () => {
   const handleOpacity = (opacity: number) => {
     setOpacity(opacity);
   };
+  useEffect(() => {
+          const socket = new PartySocket({
+              host: process.env.NEXT_PUBLIC_PARTYKIT_HOST || "localhost:1999",
+              room: "room1", // TODO: change to the room id   
+          });
+  
+          console.log(process.env.NEXT_PUBLIC_PARTYKIT_HOST)
+  
+  
+          setSocket(socket);
+  
+          socket.onopen = () => {
+              console.log("connected to partykit");
+              };
+  
+          socket.onmessage = (event) => {
+              console.log("message from partykit", event.data);
+          };
+  
+          socket.onclose = () => {
+              console.log("disconnected from partykit");
+          };
+          
+          socket.onerror = (event) => {   
+              console.log("error from partykit", event);
+          };
+  
+          return () => {
+              socket.close();
+          };
+  
+      }, []);
   return (
     <>
       <Bar
