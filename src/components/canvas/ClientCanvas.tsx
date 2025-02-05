@@ -261,13 +261,13 @@ const ClientCanvas = () => {
                   onClick={() => handlerTool("selector")}
                 />
               </li>
-              <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
+              {/* <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
                 <img
                   src="/color-palette.png"
                   alt="Color Palette Icon"
                   onClick={() => handlerTool("selector")}
                 />
-              </li>
+              </li> */}
               <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
                 <img
                   src="/line-segment.png"
