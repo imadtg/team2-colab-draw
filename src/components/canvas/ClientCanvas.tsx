@@ -44,44 +44,23 @@ const ClientCanvas = () => {
     } else {
       setBarSide(false);
     }
+  
     if (shapeType === "pen") toggleDrawingMode();
     else {
       if (
         shapeType === "circle" ||
         shapeType === "rectangle" ||
-        shapeType === "triangle" || 
-        shapeType === "ellipse"
-      ) {
-        addShape(shapeType);
-      }
-      toggleDrawingMode();
-    }
-    if (shapeType === "pen") toggleDrawingMode();
-    else {
-      if (
-        shapeType === "circle" ||
-        shapeType === "rectangle" ||
-        shapeType === "triangle" ||
         shapeType === "ligne" ||
+        shapeType === "triangle" ||
+        shapeType === "ellipse" ||
         shapeType === "text"
       ) {
         addShape(shapeType);
       }
       toggleDrawingMode();
     }
-  };
-  const [tool, setTool] = useState<
-    | "selector"
-    | "pen"
-    | "text"
-    | "eraser"
-    | "rectangle"
-    | "circle"
-    | "ligne"
-    | "triangle"
-    | "ellipse"
-  >("pen");
-
+  }
+ 
   useEffect(() => {
     const parent = canvasRef.current?.parentElement;
     if (canvasRef.current && !fabricCanvasRef.current) {
@@ -105,7 +84,13 @@ const ClientCanvas = () => {
   }, []);
 
   const addShape = (
-    shapeType: "rectangle" | "circle" | "triangle" | "ligne" | "text" | "ellipse"
+    shapeType:
+      | "rectangle"
+      | "circle"
+      | "triangle"
+      | "ligne"
+      | "text"
+      | "ellipse"
   ) => {
     if (!fabricCanvasRef.current) return;
 
@@ -122,7 +107,7 @@ const ClientCanvas = () => {
         strokeWidth: ligneWidth,
         width: 100,
         height: 100,
-        opacity: 0.5,
+        opacity: opacity,
       });
       canvas.add(rect);
     } else if (shapeType === "circle") {
@@ -134,6 +119,7 @@ const ClientCanvas = () => {
         ...(ligneType ? { strokeDashArray: [5, 5] } : null),
         strokeWidth: ligneWidth,
         radius: 50,
+        opacity: opacity,
       });
       canvas.add(circle);
     } else if (shapeType === "triangle") {
@@ -141,13 +127,14 @@ const ClientCanvas = () => {
         width: 100,
         height: 100,
         fill: BackgroundColor,
-        left: 100,
-        top: 100,
+        left: center.left - 50,
+        top: center.top - 50,
         angle: 0,
         ...(ligneType ? { strokeDashArray: [5, 5] } : null),
         stroke: colorBordure,
         strokeWidth: ligneWidth,
         selectable: true,
+        opacity: opacity,
       });
       canvas.add(triangle);
     } else if (shapeType === "ligne") {
@@ -156,33 +143,34 @@ const ClientCanvas = () => {
         strokeWidth: ligneWidth,
         ...(ligneType ? { strokeDashArray: [5, 5] } : null),
         selectable: true,
+        opacity: opacity,
       });
       canvas.add(line);
     } else if (shapeType === "text") {
       const text = new fabric.Textbox("Hello World", {
-        left: 100,
-        top: 100,
+        left: center.left - 50,
+        top: center.top - 50,
         fill: colorBordure,
+
         fontSize: ligneWidth * 10,
         fontFamily: "Arial",
         selectable: true,
+        opacity: opacity,
       });
       canvas.add(text);
-
-    }
-    else if (shapeType==='ellipse')
-    {
-        const ellipse = new fabric.Ellipse({
-            left: center.left - 50,
-            top: center.top - 50,
-            fill: BackgroundColor, // Remplace BackgroundColor par la couleur que tu souhaites
-            stroke: colorBordure,  // Remplace colorBordure par la couleur de bordure souhaitée
-            ...(ligneType ? { strokeDashArray: [5, 5] } : null), // Si ligneType est vrai, appliquer un motif de bordure en tirets
-            strokeWidth: ligneWidth, // Largeur de la bordure
-            rx: 50, // Rayon horizontal (demi-largeur de l'ellipse)
-            ry: 30, // Rayon vertical (demi-hauteur de l'ellipse)
-          });
-          canvas.add(ellipse);
+    } else if (shapeType === "ellipse") {
+      const ellipse = new fabric.Ellipse({
+        left: center.left - 50,
+        top: center.top - 50,
+        fill: BackgroundColor,
+        stroke: colorBordure,
+        ...(ligneType ? { strokeDashArray: [5, 5] } : null),
+        strokeWidth: ligneWidth,
+        rx: 50,
+        ry: 30,
+        opacity: opacity,
+      });
+      canvas.add(ellipse);
     }
     //   const path = new fabric.Path('M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80', {
     //     fill: 'transparent',

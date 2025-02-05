@@ -123,7 +123,7 @@ const Bar: React.FC<BarProps> = ({
           />
         </div>
       </div>
-      <div>
+      {/* <div>
         <span className="text-xs ">Remplissage </span>
         <div className="flex flex-row  gap-[15px]">
           <button
@@ -155,7 +155,7 @@ const Bar: React.FC<BarProps> = ({
             <img src="/i-path.png" alt="i" className="w-6 h-6" />
           </button>
         </div>
-      </div>
+      </div> */}
       <div>
         <span className="text-xs ">Largeur de Ligne</span>
         <div className="flex flex-row  gap-[15px]">
@@ -184,6 +184,7 @@ const Bar: React.FC<BarProps> = ({
           >
             <img
               src="public/circumflex-accent.png"
+              style={{backgroundColor:'white'}}
               alt="i"
               className="w-6 h-6"
             />
