@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import { useEffect, useRef, useState } from 'react';
 import * as fabric from 'fabric';
@@ -6,22 +6,22 @@ import * as fabric from 'fabric';
 const ClientCanvas = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
-    const [isDrawingMode, setIsDrawingMode] = useState(false);
+    const [isDrawingMode, setIsDrawingMode] = useState(false); // Ajouté pour le mode dessin
 
     useEffect(() => {
         if (canvasRef.current && !fabricCanvasRef.current) {
-            // Initialize Fabric canvas
+            // Initialiser le canvas Fabric
             const canvas = new fabric.Canvas(canvasRef.current, {
                 width: 800,
                 height: 600,
-                backgroundColor: '#1f2937', // Dark background to match the theme
+                backgroundColor: '#1f2937', // Fond sombre pour le thème
                 isDrawingMode: false,
             });
             
             fabricCanvasRef.current = canvas;
         }
 
-        // Cleanup function
+        // Fonction de nettoyage
         return () => {
             if (fabricCanvasRef.current) {
                 fabricCanvasRef.current.dispose();
@@ -65,12 +65,47 @@ const ClientCanvas = () => {
         canvas.isDrawingMode = newMode;
         
         if (newMode) {
-            // Initialize the brush if it doesn't exist
+            // Initialiser le pinceau s'il n'existe pas
             if (!canvas.freeDrawingBrush) {
                 canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
             }
-            canvas.freeDrawingBrush.color = '#ffffff'; // White color for drawing
+            canvas.freeDrawingBrush.color = '#ffffff'; // Couleur blanche pour le dessin
             canvas.freeDrawingBrush.width = 3;
+        }
+    };
+
+    // Nouvelle fonction pour uploader le dessin sur UploadThing
+    const handleUpload = async () => {
+        if (!fabricCanvasRef.current) return;
+
+        // Exporter le canvas en SVG
+        const svgString = fabricCanvasRef.current.toSVG();
+        // Créer un Blob à partir de la chaîne SVG
+        const blob = new Blob([svgString], { type: "image/svg+xml" });
+        // Créer un objet File à partir du Blob
+        const file = new File([blob], "drawing.svg", { type: "image/svg+xml" });
+
+        // Préparer les données pour l'upload
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            // Appel vers votre API UploadThing déjà configurée
+            const response = await fetch("/api/uploadthing", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error("Erreur lors de l'upload");
+            }
+
+            const data = await response.json();
+            console.log("Upload réussi :", data);
+            alert("Upload terminé !");
+        } catch (error: any) {
+            console.error("Erreur d'upload :", error);
+            alert(`Erreur : ${error.message}`);
         }
     };
 
@@ -98,6 +133,13 @@ const ClientCanvas = () => {
                     } text-white`}
                 >
                     {isDrawingMode ? 'Exit Drawing' : 'Start Drawing'}
+                </button>
+                {/* Bouton ajouté pour uploader le dessin sur UploadThing */}
+                <button
+                    onClick={handleUpload}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                    Upload Drawing
                 </button>
             </div>
             <canvas ref={canvasRef} />

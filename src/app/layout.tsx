@@ -1,7 +1,10 @@
-// layout.tsx
-import Navbar from './navbar';
-import { Providers } from './providers';
-import './globals.css';
+// app/layout.tsx
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "../app/api/uploadthing/core";
+import Navbar from "./navbar";
+import { Providers } from "./providers";
+import "./globals.css";
 
 export default function RootLayout({
   children,
@@ -12,6 +15,9 @@ export default function RootLayout({
     <html lang="en" className="h-full bg-gray-900">
       <body className="h-full">
         <Providers>
+          <NextSSRPlugin
+            routerConfig={extractRouterConfig(ourFileRouter)}
+          />
           <div className="min-h-full flex flex-col">
             <Navbar />
             <main className="flex-1">
