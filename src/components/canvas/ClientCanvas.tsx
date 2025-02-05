@@ -3,18 +3,32 @@
 import { useEffect, useRef, useState } from "react";
 import * as fabric from "fabric";
 import Bar from "@/app/Bar";
+import Image from "next/image";
+
 const ClientCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
   const [isDrawingMode, setIsDrawingMode] = useState(false);
   const [BarSide, setBarSide] = useState(true);
-  const [cls, setcls] = useState("Bar");
+  // const [cls, setcls] = useState("Bar");
 
   const [colorBordure, setColorBordure] = useState("red");
   const [BackgroundColor, setBackgroundColor] = useState("red");
   const [ligneWidth, setligneWidth] = useState(2);
   const [ligneType, setligneType] = useState(false);
-  const [opacity, setOpacity] = useState(1);
+  // const [opacity, setOpacity] = useState(1);
+
+  // const [tool, setTool] = useState<
+  //   | "selector"
+  //   | "pen"
+  //   | "text"
+  //   | "eraser"
+  //   | "rectangle"
+  //   | "circle"
+  //   | "ligne"
+  //   | "triangle"
+  //   | "ellipse"
+  // >("pen");
 
   const handlerTool = (
     shapeType:
@@ -49,7 +63,7 @@ const ClientCanvas = () => {
       if (
         shapeType === "circle" ||
         shapeType === "rectangle" ||
-        shapeType === "triangle" || 
+        shapeType === "triangle" ||
         shapeType === "ellipse"
       ) {
         addShape(shapeType);
@@ -70,17 +84,6 @@ const ClientCanvas = () => {
       toggleDrawingMode();
     }
   };
-  const [tool, setTool] = useState<
-    | "selector"
-    | "pen"
-    | "text"
-    | "eraser"
-    | "rectangle"
-    | "circle"
-    | "ligne"
-    | "triangle"
-    | "ellipse"
-  >("pen");
 
   useEffect(() => {
     const parent = canvasRef.current?.parentElement;
@@ -105,7 +108,13 @@ const ClientCanvas = () => {
   }, []);
 
   const addShape = (
-    shapeType: "rectangle" | "circle" | "triangle" | "ligne" | "text" | "ellipse"
+    shapeType:
+      | "rectangle"
+      | "circle"
+      | "triangle"
+      | "ligne"
+      | "text"
+      | "ellipse"
   ) => {
     if (!fabricCanvasRef.current) return;
 
@@ -168,21 +177,18 @@ const ClientCanvas = () => {
         selectable: true,
       });
       canvas.add(text);
-
-    }
-    else if (shapeType==='ellipse')
-    {
-        const ellipse = new fabric.Ellipse({
-            left: center.left - 50,
-            top: center.top - 50,
-            fill: BackgroundColor, // Remplace BackgroundColor par la couleur que tu souhaites
-            stroke: colorBordure,  // Remplace colorBordure par la couleur de bordure souhaitée
-            ...(ligneType ? { strokeDashArray: [5, 5] } : null), // Si ligneType est vrai, appliquer un motif de bordure en tirets
-            strokeWidth: ligneWidth, // Largeur de la bordure
-            rx: 50, // Rayon horizontal (demi-largeur de l'ellipse)
-            ry: 30, // Rayon vertical (demi-hauteur de l'ellipse)
-          });
-          canvas.add(ellipse);
+    } else if (shapeType === "ellipse") {
+      const ellipse = new fabric.Ellipse({
+        left: center.left - 50,
+        top: center.top - 50,
+        fill: BackgroundColor, // Remplace BackgroundColor par la couleur que tu souhaites
+        stroke: colorBordure, // Remplace colorBordure par la couleur de bordure souhaitée
+        ...(ligneType ? { strokeDashArray: [5, 5] } : null), // Si ligneType est vrai, appliquer un motif de bordure en tirets
+        strokeWidth: ligneWidth, // Largeur de la bordure
+        rx: 50, // Rayon horizontal (demi-largeur de l'ellipse)
+        ry: 30, // Rayon vertical (demi-hauteur de l'ellipse)
+      });
+      canvas.add(ellipse);
     }
     //   const path = new fabric.Path('M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80', {
     //     fill: 'transparent',
@@ -234,9 +240,9 @@ const ClientCanvas = () => {
     setligneType(type);
   };
 
-  const handleOpacity = (opacity: number) => {
-    setOpacity(opacity);
-  };
+  // const handleOpacity = (opacity: number) => {
+  //   setOpacity(opacity);
+  // };
   return (
     <>
       <Bar
@@ -245,7 +251,7 @@ const ClientCanvas = () => {
         handleColorBackground={handleColorBackground}
         handleLigneWidth={handleLigneWidth}
         handleLigneType={handleLigneType}
-        handleOpacity={handleOpacity}
+        handleOpacity={() => {}}
       />
       <div className="flex flex-col items-center gap-4">
         <div
@@ -255,73 +261,93 @@ const ClientCanvas = () => {
           <div className="flex justify-center items-center">
             <ol className="flex gap-7">
               <li className="transform transition-transform duration-300 scale-75 hover:scale-100  ">
-                <img
+                <Image
                   src="/click.png"
                   alt="Click Icon"
                   onClick={() => handlerTool("selector")}
+                  width={24}
+                  height={24}
                 />
               </li>
               <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
-                <img
+                <Image
                   src="/color-palette.png"
                   alt="Color Palette Icon"
                   onClick={() => handlerTool("selector")}
+                  width={24}
+                  height={24}
                 />
               </li>
               <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
-                <img
+                <Image
                   src="/line-segment.png"
                   alt="Line Segment Icon"
                   onClick={() => handlerTool("ligne")}
+                  width={24}
+                  height={24}
                 />
               </li>
               <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
-                <img
+                <Image
                   src="/move.png"
                   alt="Move Icon"
                   onClick={() => handlerTool("selector")}
+                  width={24}
+                  height={24}
                 />
               </li>
               <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
-                <img
+                <Image
                   src="/pen.png"
                   alt="Pen Icon"
                   onClick={() => handlerTool("pen")}
+                  width={24}
+                  height={24}
                 />
               </li>
               <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
-                <img
+                <Image
                   src="/round.png"
                   alt="Round Icon"
                   onClick={() => handlerTool("circle")}
+                  width={24}
+                  height={24}
                 />
               </li>
               <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
-                <img
+                <Image
                   src="/text.png"
                   alt="Text Icon"
                   onClick={() => handlerTool("text")}
+                  width={24}
+                  height={24}
                 />
               </li>
               <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
-                <img
+                <Image
                   src="/rectangle.png"
                   alt="Rectangle Icon"
                   onClick={() => handlerTool("rectangle")}
+                  width={24}
+                  height={24}
                 />
               </li>
               <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
-                <img
+                <Image
                   src="/triangle.png"
                   alt="triangle Icon"
                   onClick={() => handlerTool("triangle")}
+                  width={24}
+                  height={24}
                 />
               </li>
               <li className="transform transition-transform duration-300 scale-75 hover:scale-150">
-                <img
+                <Image
                   src="/vector.png"
                   alt="ellipse Icon"
                   onClick={() => handlerTool("ellipse")}
+                  width={24}
+                  height={24}
                 />
               </li>
             </ol>
